@@ -1,6 +1,7 @@
 # Import the WinSCP module
 Import-Module WinSCP
 
+##example of change to branch? 
 # Get today's date in the desired format (YYYYMMDD)
 $todaysDate = (Get-Date).ToString("yyyyMMdd")
 
@@ -61,37 +62,43 @@ for ($hour = 1; $hour -le 2; $hour++) {  # Loop through hours (1am to 2am)
 Write-Host "Renaming file..."
 Get-ChildItem *.bak | Rename-Item -NewName 'TodaySql.bak' 
 
-#Azure Credential Details
-$User = "staylor@gcfd.or"
-$PWord = ConvertTo-SecureString -String "TimeMarchesOn33!" -AsPlainText -Force
-$tenant = "72fe6487-d327-4567-b1a9-071085140f56"
-$subscription = "cb7abae7-2260-448b-9de2-aeb318a3abf9"
-$Credential = New-Object -TypeName "System.Management.Automation.PSCredential" -ArgumentList $User,$PWord
 
-Write-Host "Connecting to Azure..."
+$session.Dispose()
+Write-Host "Disconnected from SFTP server."
+
+
+
+#Azure Credential Details
+#$User = "staylor@gcfd.or"
+#$PWord = ConvertTo-SecureString -String "TimeMarchesOn33!" -AsPlainText -Force
+#$tenant = "72fe6487-d327-4567-b1a9-071085140f56"
+#$subscription = "cb7abae7-2260-448b-9de2-aeb318a3abf9"
+#$Credential = New-Object -TypeName "System.Management.Automation.PSCredential" -ArgumentList $User,$PWord
+
+#Write-Host "Connecting to Azure..."
 
 #Connect to Azure
-Connect-AzAccount -Credential $Credential -Tenant $tenant -Subscription $subscription
+#Connect-AzAccount -Credential $Credential -Tenant $tenant -Subscription $subscription
 
 # Azure Storage Account details
-$storageAccountName = "gcfddatalakeshared"
-$storageAccount = Get-AzStorageAccount -ResourceGroupName "GCFD-Datawarehouse-SHARED" -Name $storageAccountName
-$Context = $StorageAccount.Context
-$containerName = "stratus-live"
-$blobName = "TodaySql.bak"
-$filePath = "TodaySql.bak"
+#$storageAccountName = "gcfddatalakeshared"
+#$storageAccount = Get-AzStorageAccount -ResourceGroupName "GCFD-Datawarehouse-SHARED" -Name $storageAccountName
+#$Context = $StorageAccount.Context
+#$containerName = "stratus-live"
+#$blobName = "TodaySql.bak"
+#$filePath = "TodaySql.bak"
 
 #Upload to storage account
-Set-AzStorageBlobContent -Blob $blobName -Container $containerName -Context $Context -File $filePath
+#Set-AzStorageBlobContent -Blob $blobName -Container $containerName -Context $Context -File $filePath
 
-catch {
-    Write-Host "An error occurred: $_"
+#catch {
+ #   Write-Host "An error occurred: $_"
 
     # Log error details
-    "Error details: $_" | Out-File -Append -FilePath "log.txt"
-}
-finally {
+  #  "Error details: $_" | Out-File -Append -FilePath "log.txt"
+#}
+#finally {
     # Close the SFTP session
-    $session.Dispose()
-    Write-Host "Disconnected from SFTP server."
-}
+ #   $session.Dispose()
+ #   Write-Host "Disconnected from SFTP server."
+#}
